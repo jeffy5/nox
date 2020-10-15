@@ -1,0 +1,30 @@
+// {{ .Name }}ListFilter 获取应用分类过滤参数
+type {{ .Name }}ListFilter struct {
+    {{ range .Fields }}{{ .Name }} {{ .Type }} `json:"{{ underscore .Name }}"`{{ end }}
+}
+
+// {{ .Name }}ListRes 获取应用分类响应结果
+type {{ .Name }}ListRes struct {
+	{{ .Name }}NO       string                `json:"app_category_no"`
+    {{ range .Fields }}{{ .Name }} {{ .Type }} `json:"{{ underscore .Name }}"`{{ end }}
+}
+
+// {{ .Name }}CreateReq 添加应用分类请求参数
+type {{ .Name }}CreateReq struct {
+	{{ .Name }}NameI18n []{{ .Name }}NameI18n `json:"app_category_name_i18n"`
+	{{ .Name }}Level    int                   `json:"app_category_level"`
+	FatherCategoryNO    string                `json:"father_category_no"`
+}
+
+// {{ .Name }}UpdateReq 更新应用分类请求参数
+type {{ .Name }}UpdateReq struct {
+	{{ .Name }}NO       string                `json:"app_category_no"`
+	{{ .Name }}NameI18n []{{ .Name }}NameI18n `json:"app_category_name_i18n"`
+	{{ .Name }}Level    int                   `json:"app_category_level"`
+	FatherCategoryNO    string                `json:"father_category_no"`
+}
+
+// {{ .Name }}DeleteReq 删除应用分类请求参数
+type {{ .Name }}DeleteReq struct {
+	{{ .Name }}NO string `json:"app_category_no"`
+}

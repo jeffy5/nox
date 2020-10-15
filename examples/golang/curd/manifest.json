@@ -1,0 +1,19 @@
+{
+    "author": {
+        "name": "Jeffrey Wu",
+        "email": "xr-hui@qq.com"
+    },
+    "options": [
+        {
+            "type": "input",
+            "title": "What is model's name"
+        }
+    ],
+    "files": {
+        "app/models/name.go": {
+            "fields": [
+                "a", "2"
+            ]
+        }
+    }
+}
