@@ -1,19 +1,55 @@
 {
+    "version": "1.0",
     "author": {
         "name": "Jeffrey Wu",
         "email": "xr-hui@qq.com"
     },
     "options": [
         {
+            "name": "name",
             "type": "input",
-            "title": "What is model's name"
+            "title": "Please input model's name",
+            "examples": "User"
+        },
+        {
+            "name": "package_name",
+            "type": "input",
+            "title": "Please input model's package name",
+            "examples": "app_stores"
+        },
+        {
+            "name": "fields",
+            "type": "input",
+            "title": "Please input model's all fields split by ','",
+            "examples": "name:varchar(32), age:int"
         }
     ],
     "files": {
-        "app/models/name.go": {
-            "fields": [
-                "a", "2"
-            ]
-        }
-    }
+        "create": [
+            {
+                "template": "template/handler.go.tmpl",
+                "destination": "app/controllers/{{ option.package_name }}/{{ option.name }}.go"
+            },
+            {
+                "template": "template/service.go.tmpl",
+                "destination": "app/services/{{ option.package_name }}/{{ option.name }}.go"
+            }
+        ],
+        "modify": [
+            {
+                "template": "template/model.go.tmpl",
+                "destination": "app/models/{{ option.name }}.go"
+            },
+            {
+                "template": "template/router.go.tmpl",
+                "destination": "app/router/router.go",
+                "advance": {
+                    "after": "apiV1.Use(middlewares.JWT)\S{\n"
+                }
+            }
+        ]
+    },
+    "hooks": [
+        "gofmt -w -l ."
+    ]
 }
