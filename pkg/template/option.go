@@ -9,4 +9,5 @@ type Option struct {
 	Type    string
 	Title   string
 	Example string
+	Value   string
 }
