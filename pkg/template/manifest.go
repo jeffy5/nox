@@ -96,6 +96,15 @@ func (manifest *Manifest) UnmarshalJSON(b []byte) error {
 	return nil
 }
 
+// OptionMap return the option list with map type
+func (manifest *Manifest) OptionMap() map[string]string {
+	optionMap := make(map[string]string)
+	for _, option := range manifest.Options {
+		optionMap[option.Name] = option.Value
+	}
+	return optionMap
+}
+
 // Author infomations.
 type Author struct {
 	Name  string

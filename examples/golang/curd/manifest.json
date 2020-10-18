@@ -8,14 +8,20 @@
         {
             "name": "name",
             "type": "input",
-            "title": "Please input model's name",
+            "title": "Please input model's name:",
             "examples": "User"
         },
         {
             "name": "package_name",
             "type": "input",
-            "title": "Please input model's package name",
+            "title": "Please input model's package name:",
             "examples": "app_stores"
+        },
+        {
+            "name": "has_model",
+            "type": "select",
+            "title": "Is there an existing model?",
+            "examples": "y"
         },
         {
             "name": "fields",
