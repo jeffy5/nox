@@ -18,7 +18,6 @@ func List{{ .name }}(page, pageSize int, step string, filter models.{{ .name }}L
 		if err != nil {
 			return list, count, fmt.Errorf("统计总数失败 -> %w", err)
 		}
-
 		if count <= 0 {
 			return list, 0, nil
 		}
