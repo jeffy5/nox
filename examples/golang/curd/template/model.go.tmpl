@@ -1,30 +1,29 @@
-// {{ .Name }}ListFilter 获取应用分类过滤参数
-type {{ .Name }}ListFilter struct {
-    {{ range .Fields }}{{ .Name }} {{ .Type }} `json:"{{ underscore .Name }}"`{{ end }}
+// {{ .name }}ListFilter 获取{{ .name_zh }}过滤参数
+type {{ .name }}ListFilter struct {
+    {{ range $field := split .fields "," }}{{ $attrList := split $field ":" }}{{ range $i, $attr := $attrList }}{{ if eq $i (sub (len $attrList) 1) }}`json:"{{ $attr }}"`
+    {{ else }}{{ $attr }} {{ end }}{{ end }}{{ end }}
 }
 
-// {{ .Name }}ListRes 获取应用分类响应结果
-type {{ .Name }}ListRes struct {
-	{{ .Name }}NO       string                `json:"app_category_no"`
-    {{ range .Fields }}{{ .Name }} {{ .Type }} `json:"{{ underscore .Name }}"`{{ end }}
+// {{ .name }}ListRes 获取{{ .name_zh }}响应结果
+type {{ .name }}ListRes struct {
+    {{ range $field := split .fields "," }}{{ $attrList := split $field ":" }}{{ range $i, $attr := $attrList }}{{ if eq $i (sub (len $attrList) 1) }}`json:"{{ $attr }}"`
+    {{ else }}{{ $attr }} {{ end }}{{ end }}{{ end }}
 }
 
-// {{ .Name }}CreateReq 添加应用分类请求参数
-type {{ .Name }}CreateReq struct {
-	{{ .Name }}NameI18n []{{ .Name }}NameI18n `json:"app_category_name_i18n"`
-	{{ .Name }}Level    int                   `json:"app_category_level"`
-	FatherCategoryNO    string                `json:"father_category_no"`
+// {{ .name }}CreateReq 添加{{ .name_zh }}请求参数
+type {{ .name }}CreateReq struct {
+    {{ range $field := split .fields "," }}{{ $attrList := split $field ":" }}{{ range $i, $attr := $attrList }}{{ if eq $i (sub (len $attrList) 1) }}`json:"{{ $attr }}"`
+    {{ else }}{{ $attr }} {{ end }}{{ end }}{{ end }}
 }
 
-// {{ .Name }}UpdateReq 更新应用分类请求参数
-type {{ .Name }}UpdateReq struct {
-	{{ .Name }}NO       string                `json:"app_category_no"`
-	{{ .Name }}NameI18n []{{ .Name }}NameI18n `json:"app_category_name_i18n"`
-	{{ .Name }}Level    int                   `json:"app_category_level"`
-	FatherCategoryNO    string                `json:"father_category_no"`
+// {{ .name }}UpdateReq 更新{{ .name_zh }}请求参数
+type {{ .name }}UpdateReq struct {
+    {{ range $field := split .fields "," }}{{ $attrList := split $field ":" }}{{ range $i, $attr := $attrList }}{{ if eq $i (sub (len $attrList) 1) }}`json:"{{ $attr }}"`
+    {{ else }}{{ $attr }} {{ end }}{{ end }}{{ end }}
 }
 
-// {{ .Name }}DeleteReq 删除应用分类请求参数
-type {{ .Name }}DeleteReq struct {
-	{{ .Name }}NO string `json:"app_category_no"`
+// {{ .name }}DeleteReq 删除{{ .name_zh }}请求参数
+type {{ .name }}DeleteReq struct {
+    {{ range $field := split .fields "," }}{{ $attrList := split $field ":" }}{{ range $i, $attr := $attrList }}{{ if eq $i (sub (len $attrList) 1) }}`json:"{{ $attr }}"`
+    {{ else }}{{ $attr }} {{ end }}{{ end }}{{ end }}
 }

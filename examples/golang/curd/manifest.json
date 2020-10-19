@@ -12,45 +12,51 @@
             "examples": "User"
         },
         {
+            "name": "name_underline",
+            "type": "input",
+            "title": "Please input model's underline name:",
+            "examples": "user"
+        },
+        {
+            "name": "name_zh",
+            "type": "input",
+            "title": "Please input model's chinese name:",
+            "examples": "用户"
+        },
+        {
             "name": "package_name",
             "type": "input",
             "title": "Please input model's package name:",
-            "examples": "app_stores"
-        },
-        {
-            "name": "has_model",
-            "type": "select",
-            "title": "Is there an existing model?",
-            "examples": "y"
+            "examples": "users"
         },
         {
             "name": "fields",
             "type": "input",
             "title": "Please input model's all fields split by ','",
-            "examples": "name:varchar(32), age:int"
+            "examples": "name:varchar(32), Age:int:age"
         }
     ],
     "files": {
         "create": [
             {
                 "template": "template/handler.go.tmpl",
-                "destination": "app/controllers/{{ option.package_name }}/{{ option.name }}.go"
+                "destination": "app/controllers/{{ .package_name }}/{{ .name_underline }}.go"
             },
             {
                 "template": "template/service.go.tmpl",
-                "destination": "app/services/{{ option.package_name }}/{{ option.name }}.go"
+                "destination": "app/services/{{ .package_name }}/{{ .name_underline }}.go"
             }
         ],
         "modify": [
             {
                 "template": "template/model.go.tmpl",
-                "destination": "app/models/{{ option.name }}.go"
+                "destination": "app/models/{{ .name_underline }}.go"
             },
             {
                 "template": "template/router.go.tmpl",
                 "destination": "app/router/router.go",
                 "advance": {
-                    "after": "apiV1.Use(middlewares.JWT)\S{\n"
+                    "after": "apiV1.Use\\(middlewares.JWT\\)\n\\s{\n"
                 }
             }
         ]

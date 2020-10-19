@@ -1,6 +1,8 @@
 package template
 
-import "encoding/json"
+import (
+	"encoding/json"
+)
 
 type marshalManifest struct {
 	// Version tag.
@@ -73,7 +75,7 @@ func (manifest *Manifest) UnmarshalJSON(b []byte) error {
 			After:  f.Advance.After,
 		}
 		file := File{
-			Name:     f.Template,
+			Name:     f.Destination,
 			Type:     FileTypeCreate,
 			Template: f.Template,
 			Advance:  advance,
@@ -86,13 +88,14 @@ func (manifest *Manifest) UnmarshalJSON(b []byte) error {
 			After:  f.Advance.After,
 		}
 		file := File{
-			Name:     f.Template,
+			Name:     f.Destination,
 			Type:     FileTypeModify,
 			Template: f.Template,
 			Advance:  advance,
 		}
 		files = append(files, file)
 	}
+	manifest.Files = files
 	return nil
 }
 

@@ -1,0 +1,7 @@
+
+*.swp
+
+nox
+nox.exe
+
+.DS_Store

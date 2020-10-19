@@ -1,0 +1,83 @@
+package {{ .package_name }}
+
+import (
+	"ditigram_iot_backend/app/controllers"
+	"ditigram_iot_backend/app/models"
+	"ditigram_iot_backend/app/services/{{ .package_name }}"
+	"encoding/json"
+	"fmt"
+
+	"github.com/gin-gonic/gin"
+)
+
+// {{ .name }}Index 获取{{ .name_zh }}列表
+func {{ .name }}Index(ctx *gin.Context) {
+	page, pageSize, step, condition := controllers.GetPage(ctx)
+	var filter models.{{ .name }}ListFilter
+	err := json.Unmarshal(condition, &filter)
+	if err != nil {
+		controllers.ResponseError(ctx, controllers.ErrParamsInvalid, err.Error())
+		return
+	}
+
+	list, count, err := {{ .package_name }}.List{{ .name }}(page, pageSize, step, filter)
+	if err != nil {
+		controllers.ResponseError(ctx, fmt.Errorf("【获取{{ .name_zh }}列表】获取列表失败 -> %w", err))
+		return
+	}
+	controllers.ResponseSuccess(ctx, map[string]interface{}{
+		"list":  list,
+		"count": count,
+	})
+}
+
+// {{ .name }}Create 添加{{ .name_zh }}
+func {{ .name }}Create(ctx *gin.Context) {
+	var req models.{{ .name }}CreateReq
+	err := ctx.ShouldBindJSON(&req)
+	if err != nil {
+		controllers.ResponseError(ctx, controllers.ErrParamsInvalid, err.Error())
+		return
+	}
+
+	err = {{ .package_name }}.Create{{ .name }}(req)
+	if err != nil {
+		controllers.ResponseError(ctx, fmt.Errorf("【添加{{ .name_zh }}】添加{{ .name_zh }}失败 -> %w", err))
+		return
+	}
+	controllers.ResponseSuccess(ctx)
+}
+
+// {{ .name }}Update 添加{{ .name_zh }}
+func {{ .name }}Update(ctx *gin.Context) {
+	var req models.{{ .name }}UpdateReq
+	err := ctx.ShouldBindJSON(&req)
+	if err != nil {
+		controllers.ResponseError(ctx, controllers.ErrParamsInvalid, err.Error())
+		return
+	}
+
+	err = {{ .package_name }}.Update{{ .name }}(req)
+	if err != nil {
+		controllers.ResponseError(ctx, fmt.Errorf("【修改{{ .name_zh }}】修改{{ .name_zh }}失败 -> %w", err))
+		return
+	}
+	controllers.ResponseSuccess(ctx)
+}
+
+// {{ .name }}Delete 删除{{ .name_zh }}
+func {{ .name }}Delete(ctx *gin.Context) {
+	var req models.{{ .name }}DeleteReq
+	err := ctx.ShouldBindJSON(&req)
+	if err != nil {
+		controllers.ResponseError(ctx, controllers.ErrParamsInvalid, err.Error())
+		return
+	}
+
+	err = {{ .package_name }}.Delete{{ .name }}(req)
+	if err != nil {
+		controllers.ResponseError(ctx, fmt.Errorf("【删除{{ .name_zh }}】删除{{ .name_zh }}失败 -> %w", err))
+		return
+	}
+	controllers.ResponseSuccess(ctx)
+}

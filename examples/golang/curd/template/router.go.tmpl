@@ -1,1 +1,7 @@
-userNS := apiV1.Group("")
+{{ lowerfirst .name }}NS := apiV1.Group("/{{ .name_underline }}")
+{
+    {{ lowerfirst .name }}NS.POST("/index", {{ .package_name }}.{{ .name }}Index)
+    {{ lowerfirst .name }}NS.POST("/create", {{ .package_name }}.{{ .name }}Create)
+    {{ lowerfirst .name }}NS.POST("/update", {{ .package_name }}.{{ .name }}Update)
+    {{ lowerfirst .name }}NS.POST("/delete", {{ .package_name }}.{{ .name }}Delete)
+}
