@@ -23,7 +23,7 @@ func {{ .name }}Index(ctx *gin.Context) {
     userNO := ctx.GetString(controllers.CtxKeyUserNO)
 	list, count, err := {{ .package_name }}.List{{ .name }}(page, pageSize, step, filter, userNO)
 	if err != nil {
-		controllers.ResponseError(ctx, fmt.Errorf("[list {{.name}}] list {{ .name }} failed -> %w", err))
+		controllers.ResponseError(ctx, fmt.Errorf("[list {{.name_underline}}] list {{ .name_underline }} failed -> %w", err))
 		return
 	}
 	controllers.ResponseSuccess(ctx, map[string]interface{}{

@@ -22,7 +22,7 @@ func {{ .name }}Create(ctx *gin.Context) {
     userNO := ctx.GetString(controllers.CtxKeyUserNO)
 	err = {{ .package_name }}.Create{{ .name }}(req, userNO, "")
 	if err != nil {
-		controllers.ResponseError(ctx, fmt.Errorf("[create {{.name}}] create {{.name}} failed -> %w", err))
+		controllers.ResponseError(ctx, fmt.Errorf("[create {{.name_underline}}] create {{.name_underline}} failed -> %w", err))
 		return
 	}
 	controllers.ResponseSuccess(ctx)

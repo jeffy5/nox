@@ -21,7 +21,7 @@ func {{ .name }}Delete(ctx *gin.Context) {
 
 	err = {{ .package_name }}.Delete{{ .name }}(req)
 	if err != nil {
-		controllers.ResponseError(ctx, fmt.Errorf("[delete {{.name}}] delete {{.name}} failed -> %w", err))
+		controllers.ResponseError(ctx, fmt.Errorf("[delete {{.name_underline}}] delete {{.name_underline}} failed -> %w", err))
 		return
 	}
 	controllers.ResponseSuccess(ctx)

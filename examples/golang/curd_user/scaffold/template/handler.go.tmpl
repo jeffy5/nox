@@ -23,7 +23,7 @@ func {{ .name }}Index(ctx *gin.Context) {
     userNO := ctx.GetString(controllers.CtxKeyUserNO)
 	list, count, err := {{ .package_name }}.List{{ .name }}(page, pageSize, step, filter, userNO)
 	if err != nil {
-		controllers.ResponseError(ctx, fmt.Errorf("[list {{.name}}] list {{ .name }} failed -> %w", err))
+		controllers.ResponseError(ctx, fmt.Errorf("[list {{.name_underline}}] list {{ .name_underline }} failed -> %w", err))
 		return
 	}
 	controllers.ResponseSuccess(ctx, map[string]interface{}{
@@ -44,7 +44,7 @@ func {{ .name }}Create(ctx *gin.Context) {
     userNO := ctx.GetString(controllers.CtxKeyUserNO)
 	err = {{ .package_name }}.Create{{ .name }}(req, userNO, "")
 	if err != nil {
-		controllers.ResponseError(ctx, fmt.Errorf("[create {{.name}}] create {{.name}} failed -> %w", err))
+		controllers.ResponseError(ctx, fmt.Errorf("[create {{.name_underline}}] create {{.name_underline}} failed -> %w", err))
 		return
 	}
 	controllers.ResponseSuccess(ctx)
@@ -62,7 +62,7 @@ func {{ .name }}Update(ctx *gin.Context) {
     userNO := ctx.GetString(controllers.CtxKeyUserNO)
 	err = {{ .package_name }}.Update{{ .name }}(req, userNO)
 	if err != nil {
-		controllers.ResponseError(ctx, fmt.Errorf("[update {{.name}} update {{.name}} failed] -> %w", err))
+		controllers.ResponseError(ctx, fmt.Errorf("[update {{.name_underline}} update {{.name_underline}} failed] -> %w", err))
 		return
 	}
 	controllers.ResponseSuccess(ctx)
@@ -80,7 +80,7 @@ func {{ .name }}Delete(ctx *gin.Context) {
     userNO := ctx.GetString(controllers.CtxKeyUserNO)
 	err = {{ .package_name }}.Delete{{ .name }}(req, userNO)
 	if err != nil {
-		controllers.ResponseError(ctx, fmt.Errorf("[delete {{.name}}] delete {{.name}} failed-> %w", err))
+		controllers.ResponseError(ctx, fmt.Errorf("[delete {{.name_underline}}] delete {{.name_underline}} failed-> %w", err))
 		return
 	}
 	controllers.ResponseSuccess(ctx)
