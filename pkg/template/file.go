@@ -68,6 +68,7 @@ func (f *File) Generate(optionMap map[string]string) error {
 	return f.modify(optionMap)
 }
 
+// Create a new file.
 func (f *File) create(optionMap map[string]string) error {
 	// Mkdir for destination file
 	err := os.MkdirAll(filepath.Dir(f.Name), 0755)
@@ -100,6 +101,7 @@ func (f *File) create(optionMap map[string]string) error {
 	return nil
 }
 
+// Modify existed file.
 func (f *File) modify(optionMap map[string]string) error {
 	// Open template file
 	tmplFile, err := os.OpenFile(f.Template, os.O_RDONLY, 0644)

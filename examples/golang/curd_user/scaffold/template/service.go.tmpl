@@ -9,14 +9,14 @@ import (
 )
 
 // List{{ .name }} 获取{{ .name_zh }}列表
-func List{{ .name }}(page, pageSize int, step string, filter models.{{ .name }}ListFilter) ([]models.{{ .name }}ListRes, int64, error) {
+func List{{ .name }}(page, pageSize int, step string, filter models.{{ .name }}ListFilter, userNO string) ([]models.{{ .name }}ListRes, int64, error) {
 	list := make([]models.{{ .name }}ListRes, 0)
 	var count int64 = 0
 
 	if step == "start" {
-		err := set{{ .name }}ListFilter(models.DB.Model(&models.{{ .name }}{}), filter).Count(&count).Error
+		err := set{{ .name }}ListFilter(models.DB.Model(&models.{{ .name }}{}), filter, userNO).Count(&count).Error
 		if err != nil {
-			return list, count, fmt.Errorf("统计总数失败 -> %w", err)
+			return list, count, fmt.Errorf("count failed -> %w", err)
 		}
 		if count <= 0 {
 			return list, 0, nil
@@ -28,61 +28,64 @@ func List{{ .name }}(page, pageSize int, step string, filter models.{{ .name }}L
 	}
 	offset := (page - 1) * pageSize
 	err := set{{ .name }}ListFilter(
-		models.DB.Model(&models.{{ .name }}{}).Select(fields), filter,
+		models.DB.Model(&models.{{ .name }}{}).Select(fields), filter, userNO,
 	).Limit(pageSize).Offset(offset).Scan(&list).Error
 	if err != nil {
-		return list, count, fmt.Errorf("查询失败 -> %w", err)
+		return list, count, fmt.Errorf("query failed -> %w", err)
 	}
 	return list, count, nil
 }
 
 // Create{{ .name }} 创建{{ .name_zh }}
-func Create{{ .name }}(req models.{{ .name }}CreateReq) error {
+func Create{{ .name }}(req models.{{ .name }}CreateReq, userNO, subUserNO string) error {
 	{{ lowerfirst .name }} := models.{{ .name }}{
 		{{ .name }}NO:       uid.GetDBUidByTableName(models.{{ .name }}TableName),
+        UserNO: userNO,
+        SubUserNO: subUserNO,
         {{ range split .fields "," }}{{ $attrList := split . ":" }}{{ index $attrList 0 }}: req.{{ index $attrList 0 }},
         {{ end }}
 	}
 	err := models.DB.Model(&models.{{ .name }}{}).Create(&{{ lowerfirst .name }}).Error
 	if err != nil {
-		return fmt.Errorf("插入失败 -> %w", err)
+		return fmt.Errorf("insert failed -> %w", err)
 	}
 	return nil
 }
 
 // Update{{ .name }} 更新{{ .name_zh }}
-func Update{{ .name }}(req models.{{ .name }}UpdateReq) error {
+func Update{{ .name }}(req models.{{ .name }}UpdateReq, userNO string) error {
 	updateMap := map[string]interface{}{
         {{ range split .fields "," }}{{ $attrList := split . ":" }}"{{ index $attrList 2 }}": req.{{ index $attrList 0 }},
         {{ end }}
 	}
 	err := models.DB.Model(&models.{{ .name }}{}).Where(
-		"{{ .name_underline  }}_no = ? AND {{ .name_underline }}_status = ?",
-		req.{{ .name }}NO, models.{{ .name }}StatusNormal,
+		"user_no = ? AND {{ .name_underline  }}_no = ? AND {{ .name_underline }}_status = ?",
+		userNO, req.{{ .name }}NO, models.{{ .name }}StatusNormal,
 	).Updates(updateMap).Error
 	if err != nil {
-		return fmt.Errorf("更新失败 -> %w", err)
+		return fmt.Errorf("update failed -> %w", err)
 	}
 	return nil
 }
 
 // Delete{{ .name }} 删除{{ .name_zh }}
-func Delete{{ .name }}(req models.{{ .name }}DeleteReq) error {
+func Delete{{ .name }}(req models.{{ .name }}DeleteReq, userNO string) error {
 	updateMap := map[string]interface{}{
 		"{{ .name_underline }}_status": models.{{ .name }}StatusDelete,
 	}
 	err := models.DB.Model(&models.{{ .name }}{}).Where(
-		"{{ .name_underline }}_no = ? AND {{ .name_underline }}_status = ?",
-		req.{{ .name }}NO, models.{{ .name }}StatusNormal,
+		"user_no = ? AND {{ .name_underline }}_no = ? AND {{ .name_underline }}_status = ?",
+		userNO, req.{{ .name }}NO, models.{{ .name }}StatusNormal,
 	).Updates(updateMap).Error
 	if err != nil {
-		return fmt.Errorf("更新失败 -> %w", err)
+		return fmt.Errorf("update status failed -> %w", err)
 	}
 	return nil
 }
 
 // set{{ .name }}ListFilter 设置获取{{ .name_zh }}列表过滤参数
-func set{{ .name }}ListFilter(db *gorm.DB, filter models.{{ .name }}ListFilter) *gorm.DB {
-	db = db.Where("{{ .name_underline }}_status = ?", models.{{ .name }}StatusNormal)
+func set{{ .name }}ListFilter(db *gorm.DB, filter models.{{ .name }}ListFilter, userNO string) *gorm.DB {
+	db = db.Where("user_no = ? AND {{ .name_underline }}_status = ?",
+        userNO, models.{{ .name }}StatusNormal)
 	return db
 }

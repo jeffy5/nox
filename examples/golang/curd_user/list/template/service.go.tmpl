@@ -1,0 +1,44 @@
+package {{ .package_name }}
+
+import (
+	"ditigram_iot_backend/app/models"
+	"ditigram_iot_backend/app/utils/uid"
+	"fmt"
+
+	"gorm.io/gorm"
+)
+
+// List{{ .name }} 获取{{ .name_zh }}列表
+func List{{ .name }}(page, pageSize int, step string, filter models.{{ .name }}ListFilter, userNO string) ([]models.{{ .name }}ListRes, int64, error) {
+	list := make([]models.{{ .name }}ListRes, 0)
+	var count int64 = 0
+
+	if step == "start" {
+		err := set{{ .name }}ListFilter(models.DB.Model(&models.{{ .name }}{}), filter, userNO).Count(&count).Error
+		if err != nil {
+			return list, count, fmt.Errorf("count failed -> %w", err)
+		}
+		if count <= 0 {
+			return list, 0, nil
+		}
+	}
+
+	fields := []string{
+		"{{ .name_underline }}_no", {{ range split .fields "," }}"{{ index (split . ":") 2 }}", {{ end }}
+	}
+	offset := (page - 1) * pageSize
+	err := set{{ .name }}ListFilter(
+		models.DB.Model(&models.{{ .name }}{}).Select(fields), filter, userNO,
+	).Limit(pageSize).Offset(offset).Scan(&list).Error
+	if err != nil {
+		return list, count, fmt.Errorf("query failed -> %w", err)
+	}
+	return list, count, nil
+}
+
+// set{{ .name }}ListFilter 设置获取{{ .name_zh }}列表过滤参数
+func set{{ .name }}ListFilter(db *gorm.DB, filter models.{{ .name }}ListFilter, userNO string) *gorm.DB {
+	db = db.Where("user_no = ? AND {{ .name_underline }}_status = ?",
+        userNO, models.{{ .name }}StatusNormal)
+	return db
+}

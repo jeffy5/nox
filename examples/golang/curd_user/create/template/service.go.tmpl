@@ -1,0 +1,25 @@
+package {{ .package_name }}
+
+import (
+	"ditigram_iot_backend/app/models"
+	"ditigram_iot_backend/app/utils/uid"
+	"fmt"
+
+	"gorm.io/gorm"
+)
+
+// Create{{ .name }} 创建{{ .name_zh }}
+func Create{{ .name }}(req models.{{ .name }}CreateReq, userNO, subUserNO string) error {
+	{{ lowerfirst .name }} := models.{{ .name }}{
+		{{ .name }}NO:       uid.GetDBUidByTableName(models.{{ .name }}TableName),
+        UserNO: userNO,
+        SubUserNO: subUserNO,
+        {{ range split .fields "," }}{{ $attrList := split . ":" }}{{ index $attrList 0 }}: req.{{ index $attrList 0 }},
+        {{ end }}
+	}
+	err := models.DB.Model(&models.{{ .name }}{}).Create(&{{ lowerfirst .name }}).Error
+	if err != nil {
+		return fmt.Errorf("insert failed -> %w", err)
+	}
+	return nil
+}

@@ -1,0 +1,28 @@
+package {{ .package_name }}
+
+import (
+	"ditigram_iot_backend/app/controllers"
+	"ditigram_iot_backend/app/models"
+	"ditigram_iot_backend/app/services/{{ .package_name }}"
+	"encoding/json"
+	"fmt"
+
+	"github.com/gin-gonic/gin"
+)
+
+// {{ .name }}Create 添加{{ .name_zh }}
+func {{ .name }}Create(ctx *gin.Context) {
+	var req models.{{ .name }}CreateReq
+	err := ctx.ShouldBindJSON(&req)
+	if err != nil {
+		controllers.ResponseError(ctx, controllers.ErrParamsInvalid, err.Error())
+		return
+	}
+
+	err = {{ .package_name }}.Create{{ .name }}(req)
+	if err != nil {
+		controllers.ResponseError(ctx, fmt.Errorf("[create {{.name}}] create {{.name}} failed -> %w", err))
+		return
+	}
+	controllers.ResponseSuccess(ctx)
+}

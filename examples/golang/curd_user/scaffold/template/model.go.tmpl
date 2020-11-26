@@ -19,14 +19,12 @@ type {{ .name }}CreateReq struct {
 
 // {{ .name }}UpdateReq 更新{{ .name_zh }}请求参数
 type {{ .name }}UpdateReq struct {
-    {{ .name }}NO string `json:"{{ .name_underline }}_no"`
+    {{ .name }}NO string `json:"{{ .name_underline }}_no" binding:"required"`
     {{ range $field := split .fields "," }}{{ $attrList := split $field ":" }}{{ range $i, $attr := $attrList }}{{ if eq $i (sub (len $attrList) 1) }}`json:"{{ $attr }}"`
     {{ else }}{{ $attr }} {{ end }}{{ end }}{{ end }}
 }
 
 // {{ .name }}DeleteReq 删除{{ .name_zh }}请求参数
 type {{ .name }}DeleteReq struct {
-    {{ .name }}NO string `json:"{{ .name_underline }}_no"`
-    {{ range $field := split .fields "," }}{{ $attrList := split $field ":" }}{{ range $i, $attr := $attrList }}{{ if eq $i (sub (len $attrList) 1) }}`json:"{{ $attr }}"`
-    {{ else }}{{ $attr }} {{ end }}{{ end }}{{ end }}
+    {{ .name }}NO string `json:"{{ .name_underline }}_no" binding:"required"`
 }

@@ -1,0 +1,33 @@
+package {{ .package_name }}
+
+import (
+	"ditigram_iot_backend/app/controllers"
+	"ditigram_iot_backend/app/models"
+	"ditigram_iot_backend/app/services/{{ .package_name }}"
+	"encoding/json"
+	"fmt"
+
+	"github.com/gin-gonic/gin"
+)
+
+// {{ .name }}Index 获取{{ .name_zh }}列表
+func {{ .name }}Index(ctx *gin.Context) {
+	page, pageSize, step, condition := controllers.GetPage(ctx)
+	var filter models.{{ .name }}ListFilter
+	err := json.Unmarshal(condition, &filter)
+	if err != nil {
+		controllers.ResponseError(ctx, controllers.ErrParamsInvalid, err.Error())
+		return
+	}
+
+    userNO := ctx.GetString(controllers.CtxKeyUserNO)
+	list, count, err := {{ .package_name }}.List{{ .name }}(page, pageSize, step, filter, userNO)
+	if err != nil {
+		controllers.ResponseError(ctx, fmt.Errorf("[list {{.name}}] list {{ .name }} failed -> %w", err))
+		return
+	}
+	controllers.ResponseSuccess(ctx, map[string]interface{}{
+		"list":  list,
+		"count": count,
+	})
+}

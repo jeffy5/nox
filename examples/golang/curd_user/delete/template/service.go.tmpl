@@ -1,0 +1,31 @@
+package {{ .package_name }}
+
+import (
+	"ditigram_iot_backend/app/models"
+	"ditigram_iot_backend/app/utils/uid"
+	"fmt"
+
+	"gorm.io/gorm"
+)
+
+// Delete{{ .name }} 删除{{ .name_zh }}
+func Delete{{ .name }}(req models.{{ .name }}DeleteReq, userNO string) error {
+	updateMap := map[string]interface{}{
+		"{{ .name_underline }}_status": models.{{ .name }}StatusDelete,
+	}
+	err := models.DB.Model(&models.{{ .name }}{}).Where(
+		"user_no = ? AND {{ .name_underline }}_no = ? AND {{ .name_underline }}_status = ?",
+		userNO, req.{{ .name }}NO, models.{{ .name }}StatusNormal,
+	).Updates(updateMap).Error
+	if err != nil {
+		return fmt.Errorf("update status failed -> %w", err)
+	}
+	return nil
+}
+
+// set{{ .name }}ListFilter 设置获取{{ .name_zh }}列表过滤参数
+func set{{ .name }}ListFilter(db *gorm.DB, filter models.{{ .name }}ListFilter, userNO string) *gorm.DB {
+	db = db.Where("user_no = ? AND {{ .name_underline }}_status = ?",
+        userNO, models.{{ .name }}StatusNormal)
+	return db
+}
