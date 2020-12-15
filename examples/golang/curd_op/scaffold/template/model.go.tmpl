@@ -1,0 +1,30 @@
+// {{ .name }}List4OpFilter 获取{{ .name_zh }}过滤参数
+type {{ .name }}List4OpFilter struct {
+    {{ range $field := split .fields "," }}{{ $attrList := split $field ":" }}{{ range $i, $attr := $attrList }}{{ if eq $i (sub (len $attrList) 1) }}`json:"{{ $attr }}"`
+    {{ else }}{{ $attr }} {{ end }}{{ end }}{{ end }}
+}
+
+// {{ .name }}List4OpRes 获取{{ .name_zh }}响应结果
+type {{ .name }}List4OpRes struct {
+    {{ .name }}NO string `json:"{{ .name_underline }}_no"`
+    {{ range $field := split .fields "," }}{{ $attrList := split $field ":" }}{{ range $i, $attr := $attrList }}{{ if eq $i (sub (len $attrList) 1) }}`json:"{{ $attr }}"`
+    {{ else }}{{ $attr }} {{ end }}{{ end }}{{ end }}
+}
+
+// {{ .name }}Create4OpReq 添加{{ .name_zh }}请求参数
+type {{ .name }}Create4OpReq struct {
+    {{ range $field := split .fields "," }}{{ $attrList := split $field ":" }}{{ range $i, $attr := $attrList }}{{ if eq $i (sub (len $attrList) 1) }}`json:"{{ $attr }}"`
+    {{ else }}{{ $attr }} {{ end }}{{ end }}{{ end }}
+}
+
+// {{ .name }}Update4OpReq 更新{{ .name_zh }}请求参数
+type {{ .name }}Update4OpReq struct {
+    {{ .name }}NO string `json:"{{ .name_underline }}_no"`
+    {{ range $field := split .fields "," }}{{ $attrList := split $field ":" }}{{ range $i, $attr := $attrList }}{{ if eq $i (sub (len $attrList) 1) }}`json:"{{ $attr }}"`
+    {{ else }}{{ $attr }} {{ end }}{{ end }}{{ end }}
+}
+
+// {{ .name }}Delete4OpReq 删除{{ .name_zh }}请求参数
+type {{ .name }}Delete4OpReq struct {
+    {{ .name }}NO string `json:"{{ .name_underline }}_no"`
+}

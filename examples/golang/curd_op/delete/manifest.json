@@ -1,0 +1,67 @@
+{
+    "version": "1.0",
+    "author": {
+        "name": "Jeffrey Wu",
+        "email": "xr-hui@qq.com"
+    },
+    "options": [
+        {
+            "name": "name",
+            "type": "input",
+            "title": "Please input model's name:",
+            "examples": "User"
+        },
+        {
+            "name": "name_underline",
+            "type": "input",
+            "title": "Please input model's underline name:",
+            "examples": "user"
+        },
+        {
+            "name": "name_zh",
+            "type": "input",
+            "title": "Please input model's chinese name:",
+            "examples": "用户"
+        },
+        {
+            "name": "package_name",
+            "type": "input",
+            "title": "Please input model's package name:",
+            "examples": "users"
+        },
+        {
+            "name": "fields",
+            "type": "input",
+            "title": "Please input model's all fields split by ','",
+            "examples": "name:varchar(32), Age:int:age"
+        }
+    ],
+    "files": {
+        "create": [
+            {
+                "template": "template/handler.go.tmpl",
+                "destination": "app/controllers/op/{{ .package_name }}/{{ .name_underline }}.go"
+            },
+            {
+                "template": "template/service.go.tmpl",
+                "destination": "app/services/op/{{ .package_name }}/{{ .name_underline }}.go"
+            }
+        ],
+        "modify": [
+            {
+                "template": "template/model.go.tmpl",
+                "destination": "app/models/{{ .name_underline }}.go"
+            },
+            {
+                "template": "template/router.go.tmpl",
+                "destination": "app/router/router.go",
+                "advance": {
+                    "after": "apiV1.Use\\(middlewares.JWT\\)\n\\s{\n"
+                }
+            }
+        ]
+    },
+    "hooks": [
+        "gofmt -w -l ."
+    ]
+}

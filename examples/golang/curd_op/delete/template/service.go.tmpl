@@ -1,0 +1,24 @@
+package {{ .package_name }}
+
+import (
+	"ditigram_iot_backend/app/models"
+	"ditigram_iot_backend/app/utils/uid"
+	"fmt"
+
+	"gorm.io/gorm"
+)
+
+// Delete{{ .name }}4Op 删除{{ .name_zh }}
+func Delete{{ .name }}4Op(req models.{{ .name }}DeleteReq) error {
+	updateMap := map[string]interface{}{
+		"{{ .name_underline }}_status": models.{{ .name }}StatusDelete,
+	}
+	err := models.DB.Model(&models.{{ .name }}{}).Where(
+		"{{ .name_underline }}_no = ? AND {{ .name_underline }}_status = ?",
+		req.{{ .name }}NO, models.{{ .name }}StatusNormal,
+	).Updates(updateMap).Error
+	if err != nil {
+		return fmt.Errorf("update failed -> %w", err)
+	}
+	return nil
+}

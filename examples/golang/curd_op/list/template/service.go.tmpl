@@ -1,0 +1,43 @@
+package {{ .package_name }}
+
+import (
+	"ditigram_iot_backend/app/models"
+	"ditigram_iot_backend/app/utils/uid"
+	"fmt"
+
+	"gorm.io/gorm"
+)
+
+// List{{ .name }}4Op 获取{{ .name_zh }}列表
+func List{{ .name }}4Op(page, pageSize int, step string, filter models.{{ .name }}List4OpFilter) ([]models.{{ .name }}List4OpRes, int64, error) {
+	list := make([]models.{{ .name }}List4OpRes, 0)
+	var count int64 = 0
+
+	if step == "start" {
+		err := set{{ .name }}List4OpFilter(models.DB.Model(&models.{{ .name }}{}), filter).Count(&count).Error
+		if err != nil {
+			return list, count, fmt.Errorf("count failed -> %w", err)
+		}
+		if count <= 0 {
+			return list, 0, nil
+		}
+	}
+
+	fields := []string{
+		"{{ .name_underline }}_no", {{ range split .fields "," }}"{{ index (split . ":") 2 }}", {{ end }}
+	}
+	offset := (page - 1) * pageSize
+	err := set{{ .name }}List4OpFilter(
+		models.DB.Model(&models.{{ .name }}{}).Select(fields), filter,
+	).Limit(pageSize).Offset(offset).Scan(&list).Error
+	if err != nil {
+		return list, count, fmt.Errorf("query failed -> %w", err)
+	}
+	return list, count, nil
+}
+
+// set{{ .name }}List4OpFilter 设置获取{{ .name_zh }}列表过滤参数
+func set{{ .name }}List4OpFilter(db *gorm.DB, filter models.{{ .name }}ListFilter) *gorm.DB {
+	db = db.Where("{{ .name_underline }}_status = ?", models.{{ .name }}StatusNormal)
+	return db
+}

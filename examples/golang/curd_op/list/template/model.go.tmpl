@@ -1,0 +1,12 @@
+// {{ .name }}List4OpFilter 获取{{ .name_zh }}过滤参数
+type {{ .name }}List4OpFilter struct {
+    {{ range $field := split .fields "," }}{{ $attrList := split $field ":" }}{{ range $i, $attr := $attrList }}{{ if eq $i (sub (len $attrList) 1) }}`json:"{{ $attr }}"`
+    {{ else }}{{ $attr }} {{ end }}{{ end }}{{ end }}
+}
+
+// {{ .name }}List4OpRes 获取{{ .name_zh }}响应结果
+type {{ .name }}List4OpRes struct {
+    {{ .name }}NO string `json:"{{ .name_underline }}_no"`
+    {{ range $field := split .fields "," }}{{ $attrList := split $field ":" }}{{ range $i, $attr := $attrList }}{{ if eq $i (sub (len $attrList) 1) }}`json:"{{ $attr }}"`
+    {{ else }}{{ $attr }} {{ end }}{{ end }}{{ end }}
+}

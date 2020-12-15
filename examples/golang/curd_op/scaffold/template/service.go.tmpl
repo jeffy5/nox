@@ -1,0 +1,88 @@
+package {{ .package_name }}
+
+import (
+	"ditigram_iot_backend/app/models"
+	"ditigram_iot_backend/app/utils/uid"
+	"fmt"
+
+	"gorm.io/gorm"
+)
+
+// List{{ .name }}4Op 获取{{ .name_zh }}列表
+func List{{ .name }}4Op(page, pageSize int, step string, filter models.{{ .name }}List4OpFilter) ([]models.{{ .name }}List4OpRes, int64, error) {
+	list := make([]models.{{ .name }}List4OpRes, 0)
+	var count int64 = 0
+
+	if step == "start" {
+		err := set{{ .name }}List4OpFilter(models.DB.Model(&models.{{ .name }}{}), filter).Count(&count).Error
+		if err != nil {
+			return list, count, fmt.Errorf("count failed -> %w", err)
+		}
+		if count <= 0 {
+			return list, 0, nil
+		}
+	}
+
+	fields := []string{
+		"{{ .name_underline }}_no", {{ range split .fields "," }}"{{ index (split . ":") 2 }}", {{ end }}
+	}
+	offset := (page - 1) * pageSize
+	err := set{{ .name }}List4OpFilter(
+		models.DB.Model(&models.{{ .name }}{}).Select(fields), filter,
+	).Limit(pageSize).Offset(offset).Scan(&list).Error
+	if err != nil {
+		return list, count, fmt.Errorf("query failed -> %w", err)
+	}
+	return list, count, nil
+}
+
+// Create{{ .name }}4Op 创建{{ .name_zh }}
+func Create{{ .name }}4Op(req models.{{ .name }}Create4OpReq) error {
+	{{ lowerfirst .name }} := models.{{ .name }}{
+		{{ .name }}NO:       uid.GetDBUidByTableName(models.{{ .name }}TableName),
+        {{ range split .fields "," }}{{ $attrList := split . ":" }}{{ index $attrList 0 }}: req.{{ index $attrList 0 }},
+        {{ end }}
+	}
+	err := models.DB.Model(&models.{{ .name }}{}).Create(&{{ lowerfirst .name }}).Error
+	if err != nil {
+		return fmt.Errorf("insert failed -> %w", err)
+	}
+	return nil
+}
+
+// Update{{ .name }}4Op 更新{{ .name_zh }}
+func Update{{ .name }}4Op(req models.{{ .name }}Update4OpReq) error {
+	updateMap := map[string]interface{}{
+        {{ range split .fields "," }}{{ $attrList := split . ":" }}"{{ index $attrList 2 }}": req.{{ index $attrList 0 }},
+        {{ end }}
+	}
+	err := models.DB.Model(&models.{{ .name }}{}).Where(
+		"{{ .name_underline  }}_no = ? AND {{ .name_underline }}_status = ?",
+		req.{{ .name }}NO, models.{{ .name }}StatusNormal,
+	).Updates(updateMap).Error
+	if err != nil {
+		return fmt.Errorf("update failed -> %w", err)
+	}
+	return nil
+}
+
+// Delete{{ .name }}4Op 删除{{ .name_zh }}
+func Delete{{ .name }}4Op(req models.{{ .name }}Delete4OpReq) error {
+	updateMap := map[string]interface{}{
+		"{{ .name_underline }}_status": models.{{ .name }}StatusDelete,
+	}
+	err := models.DB.Model(&models.{{ .name }}{}).Where(
+		"{{ .name_underline }}_no = ? AND {{ .name_underline }}_status = ?",
+		req.{{ .name }}NO, models.{{ .name }}StatusNormal,
+	).Updates(updateMap).Error
+	if err != nil {
+		return fmt.Errorf("update failed -> %w", err)
+	}
+	return nil
+}
+
+// set{{ .name }}List4OpFilter 设置获取{{ .name_zh }}列表过滤参数
+func set{{ .name }}List4OpFilter(db *gorm.DB, filter models.{{ .name }}List4OpFilter) *gorm.DB {
+	db = db.Where("{{ .name_underline }}_status = ?", models.{{ .name }}StatusNormal)
+	return db
+}

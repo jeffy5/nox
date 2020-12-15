@@ -1,0 +1,28 @@
+package {{ .package_name }}
+
+import (
+	"ditigram_iot_backend/app/controllers"
+	"ditigram_iot_backend/app/models"
+	"ditigram_iot_backend/app/services/{{ .package_name }}"
+	"encoding/json"
+	"fmt"
+
+	"github.com/gin-gonic/gin"
+)
+
+// {{ .name }}Delete4Op 删除{{ .name_zh }}
+func {{ .name }}Delete4Op(ctx *gin.Context) {
+	var req models.{{ .name }}Delete4OpReq
+	err := ctx.ShouldBindJSON(&req)
+	if err != nil {
+		controllers.ResponseError(ctx, controllers.ErrParamsInvalid, err.Error())
+		return
+	}
+
+	err = {{ .package_name }}.Delete{{ .name }}4Op(req)
+	if err != nil {
+		controllers.ResponseError(ctx, fmt.Errorf("[delete {{.name_underline}}] delete {{.name_underline}} failed -> %w", err))
+		return
+	}
+	controllers.ResponseSuccess(ctx)
+}
