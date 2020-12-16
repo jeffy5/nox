@@ -37,7 +37,7 @@ func List{{ .name }}4Op(page, pageSize int, step string, filter models.{{ .name 
 }
 
 // set{{ .name }}List4OpFilter 设置获取{{ .name_zh }}列表过滤参数
-func set{{ .name }}List4OpFilter(db *gorm.DB, filter models.{{ .name }}ListFilter) *gorm.DB {
+func set{{ .name }}List4OpFilter(db *gorm.DB, filter models.{{ .name }}List4OpFilter) *gorm.DB {
 	db = db.Where("{{ .name_underline }}_status = ?", models.{{ .name }}StatusNormal)
 	return db
 }

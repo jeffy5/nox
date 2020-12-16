@@ -1,7 +1,7 @@
 {{ lowerfirst .name }}NS := apiV1.Group("/{{ .name_underline }}")
 {
-    {{ lowerfirst .name }}NS.POST("/index", {{ .package_name }}.{{ .name }}Index4Op)
-    {{ lowerfirst .name }}NS.POST("/create", {{ .package_name }}.{{ .name }}Create4Op)
-    {{ lowerfirst .name }}NS.POST("/update", {{ .package_name }}.{{ .name }}Update4Op)
-    {{ lowerfirst .name }}NS.POST("/delete", {{ .package_name }}.{{ .name }}Delete4Op)
+    {{ lowerfirst .name }}NS.POST("/index", {{ .package_name }}4op.{{ .name }}Index4Op)
+    {{ lowerfirst .name }}NS.POST("/create", {{ .package_name }}4op.{{ .name }}Create4Op)
+    {{ lowerfirst .name }}NS.POST("/update", {{ .package_name }}4op.{{ .name }}Update4Op)
+    {{ lowerfirst .name }}NS.POST("/delete", {{ .package_name }}4op.{{ .name }}Delete4Op)
 }

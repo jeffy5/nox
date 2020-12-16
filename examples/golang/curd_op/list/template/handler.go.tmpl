@@ -3,7 +3,7 @@ package {{ .package_name }}
 import (
 	"ditigram_iot_backend/app/controllers"
 	"ditigram_iot_backend/app/models"
-	"ditigram_iot_backend/app/services/{{ .package_name }}"
+	"ditigram_iot_backend/app/services/op/{{ .package_name }}"
 	"encoding/json"
 	"fmt"
 
@@ -20,7 +20,7 @@ func {{ .name }}Index4Op(ctx *gin.Context) {
 		return
 	}
 
-	list, count, err := {{ .package_name }}.List4Op{{ .name }}(page, pageSize, step, filter)
+	list, count, err := {{ .package_name }}.List{{ .name }}4Op(page, pageSize, step, filter)
 	if err != nil {
 		controllers.ResponseError(ctx, fmt.Errorf("[list {{.name_underline}} failed] list {{.name_underline}} failed -> %w", err))
 		return
