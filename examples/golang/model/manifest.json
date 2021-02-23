@@ -1,0 +1,50 @@
+{
+    "version": "1.0",
+    "author": {
+        "name": "Jeffrey Wu",
+        "email": "xr-hui@qq.com"
+    },
+    "options": [
+        {
+            "name": "name",
+            "type": "input",
+            "title": "Please input model's name:",
+            "examples": "Name"
+        },
+        {
+            "name": "name_slug",
+            "type": "input",
+            "title": "Please input model's slug:",
+            "examples": "nameSlug"
+        },
+        {
+            "name": "name_underline",
+            "type": "input",
+            "title": "Please input model's underline name:",
+            "examples": "name_underline"
+        },
+        {
+            "name": "name_zh",
+            "type": "input",
+            "title": "Please input model's chinese name:",
+            "examples": "用户"
+        },
+        {
+            "name": "fields",
+            "type": "input",
+            "title": "Please input model's all fields split by ','",
+            "examples": "CorpID:corpid:string:企业微信ID,CorpName:corp_name:string:企业微信名称(企业简称)"
+        }
+    ],
+    "files": {
+        "create": [
+            {
+                "template": "template/model.go.tmpl",
+                "destination": "app/models/{{ .name_underline }}.go"
+            }
+        ]
+    },
+    "hooks": [
+        "gofmt -w -l ."
+    ]
+}

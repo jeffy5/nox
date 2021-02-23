@@ -1,0 +1,27 @@
+package models
+
+import "time"
+
+// {{ .name }} related constants.
+const (
+	{{ .name }}TableName = "{{ .name_underline }}"
+
+    {{ .name }}StatusNormal = 0
+    {{ .name }}StatusDelete = -1
+)
+
+// {{ .name }} model.
+type {{ .name }} struct {
+	{{ .name }}ID     uint64 `json:"{{ .name_underline }}_id" gorm:"column:{{ .name_underline }}_id;primaryKey;autoIncrement;comment:'表ID'"`
+    {{ .name }}NO     string `json:"{{ .name_underline }}_no" gorm:"column:{{ .name_underline }}_no;type:varchar(32);index;comment:'表NO'"`
+    {{ range $field := split .fields "," }}{{ $attrList := split $field ":" }}{{ index $attrList 0 }} {{ index $attrList 2 }} `json:"{{ index $attrList 1 }}" gorm:"column:{{ index $attrList 1 }};comment:'{{ index $attrList 3 }}'"`
+    {{ end }}
+    {{ .name }}Status int `json:"{{ .name_underline }}_status" gorm:"column:{{ .name_underline }}_status;comment:'表状态'"`
+	CreatedAt         time.Time `json:"created_at" gorm:"column:created_at;autoCreateTime;comment:'创建时间'"`
+	UpdatedAt         time.Time `json:"updated_at" gorm:"column:updated_at;autoUpdateTime;comment:'更新时间'"`
+}
+
+// TableName return model's table name.
+func ({{ .name_slug }} *{{ .name }}) TableName() string {
+	return tablePrefix + "_" + {{ .name }}TableName
+}
