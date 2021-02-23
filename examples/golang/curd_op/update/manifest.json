@@ -40,11 +40,11 @@
         "create": [
             {
                 "template": "template/handler.go.tmpl",
-                "destination": "app/controllers/{{ .package_name }}/{{ .name_underline }}.go"
+                "destination": "app/controllers/op/{{ .package_name }}/{{ .name_underline }}.go"
             },
             {
                 "template": "template/service.go.tmpl",
-                "destination": "app/services/{{ .package_name }}/{{ .name_underline }}.go"
+                "destination": "app/services/op/{{ .package_name }}/{{ .name_underline }}.go"
             }
         ],
         "modify": [

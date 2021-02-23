@@ -10,16 +10,16 @@ import (
 	"github.com/gin-gonic/gin"
 )
 
-// {{ .name }}Update 更新{{ .name_zh }}
-func {{ .name }}Update(ctx *gin.Context) {
-	var req models.{{ .name }}UpdateReq
+// {{ .name }}Update4Op 更新{{ .name_zh }}
+func {{ .name }}Update4Op(ctx *gin.Context) {
+	var req models.{{ .name }}Update4OpReq
 	err := ctx.ShouldBindJSON(&req)
 	if err != nil {
 		controllers.ResponseError(ctx, controllers.ErrParamsInvalid, err.Error())
 		return
 	}
 
-	err = {{ .package_name }}.Update{{ .name }}(req)
+	err = {{ .package_name }}.Update{{ .name }}4Op(req)
 	if err != nil {
 		controllers.ResponseError(ctx, fmt.Errorf("[update {{.name_underline}}] update {{.name_underline}} failed -> %w", err))
 		return

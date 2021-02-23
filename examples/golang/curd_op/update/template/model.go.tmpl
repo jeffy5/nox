@@ -1,5 +1,5 @@
-// {{ .name }}UpdateReq 更新{{ .name_zh }}请求参数
-type {{ .name }}UpdateReq struct {
+// {{ .name }}Update4OpReq 更新{{ .name_zh }}请求参数
+type {{ .name }}Update4OpReq struct {
     {{ .name }}NO string `json:"{{ .name_underline }}_no"`
     {{ range $field := split .fields "," }}{{ $attrList := split $field ":" }}{{ range $i, $attr := $attrList }}{{ if eq $i (sub (len $attrList) 1) }}`json:"{{ $attr }}"`
     {{ else }}{{ $attr }} {{ end }}{{ end }}{{ end }}

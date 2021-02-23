@@ -8,8 +8,8 @@ import (
 	"gorm.io/gorm"
 )
 
-// Update{{ .name }} 更新{{ .name_zh }}
-func Update{{ .name }}(req models.{{ .name }}UpdateReq) error {
+// Update{{ .name }}4Op 更新{{ .name_zh }}
+func Update{{ .name }}4Op(req models.{{ .name }}Update4OpReq) error {
 	updateMap := map[string]interface{}{
         {{ range split .fields "," }}{{ $attrList := split . ":" }}"{{ index $attrList 2 }}": req.{{ index $attrList 0 }},
         {{ end }}
