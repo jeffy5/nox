@@ -108,12 +108,12 @@ func Handle(engine *gin.Engine, db *gorm.DB) {
 		{{ .name_var }}Service: service.New{{ .name }}Service(db),
 	}
 
-	guestNS := engine.Group("/api/v1/{{ .name_underline }}")
-	guestNS.Use(middlewares.JWT)
+    {{ .name_var }}NS := engine.Group("/api/v1/{{ .name_underline }}")
+    {{ .name_var }}NS.Use(middlewares.JWT)
 	{
-		guestNS.POST("/list", handler.{{ .name }}List)
-		guestNS.POST("/create", handler.{{ .name }}Create)
-		guestNS.POST("/update", handler.{{ .name }}Update)
-		guestNS.POST("/delete", handler.{{ .name }}Delete)
+        {{ .name_var }}NS.POST("/list", handler.{{ .name }}List)
+        {{ .name_var }}NS.POST("/create", handler.{{ .name }}Create)
+        {{ .name_var }}NS.POST("/update", handler.{{ .name }}Update)
+        {{ .name_var }}NS.POST("/delete", handler.{{ .name }}Delete)
 	}
 }

@@ -52,11 +52,6 @@ func (dao *{{ .name_var }}Dao) Create({{ .name_var }} *models.{{ .name }}) error
 	return dao.db.Create({{ .name_var }}).Error
 }
 
-// Update 更新{{ .name_zh }}
-func (dao *{{ .name_var }}Dao) Update({{ .name_var }} *models.{{ .name }}) error {
-	return dao.db.Model(models.{{ .name }}{}).Where("id = ?", {{ .name_var }}.ID).Updates(&{{ .name_var }}).Error
-}
-
 // GetByID 根据 ID 获取{{ .name_zh }}
 func (dao *{{ .name_var }}Dao) GetByID(id uint64) (*models.{{ .name }}, error) {
     var {{ .name_var }} models.{{ .name }}
