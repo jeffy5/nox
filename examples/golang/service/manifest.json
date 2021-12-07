@@ -1,0 +1,76 @@
+{
+    "version": "1.0",
+    "author": {
+        "name": "Jeffrey Wu",
+        "email": "xr-hui@qq.com"
+    },
+    "options": [
+        {
+            "name": "project_mod",
+            "type": "input",
+            "title": "Please input project's module name",
+            "examples": "github.com/ditigram/access-control-server"
+        },
+        {
+            "name": "name",
+            "type": "input",
+            "title": "Please input model's name:",
+            "examples": "User"
+        },
+        {
+            "name": "name_var",
+            "type": "input",
+            "title": "Please input model's name with variable mode:",
+            "examples": "user"
+        },
+        {
+            "name": "name_underline",
+            "type": "input",
+            "title": "Please input model's underline name:",
+            "examples": "user"
+        },
+        {
+            "name": "name_zh",
+            "type": "input",
+            "title": "Please input model's chinese name:",
+            "examples": "用户"
+        },
+        {
+            "name": "package_name",
+            "type": "input",
+            "title": "Please input model's package name:",
+            "examples": "users"
+        },
+        {
+            "name": "fields",
+            "type": "input",
+            "title": "Please input model's all fields split by ','",
+            "examples": "name:varchar(32), Age:int:age"
+        }
+    ],
+    "files": {
+        "create": [
+            {
+                "template": "template/api.go.tmpl",
+                "destination": "app/service/{{ .name_underline }}/api/{{ .name_underline }}.go"
+            },
+            {
+                "template": "template/dao.go.tmpl",
+                "destination": "app/service/{{ .name_underline }}/dao/{{ .name_underline }}.go"
+            },
+            {
+                "template": "template/service.go.tmpl",
+                "destination": "app/service/{{ .name_underline }}/service/{{ .name_underline }}.go"
+            },
+            {
+                "template": "template/handler.go.tmpl",
+                "destination": "app/service/{{ .name_underline }}/handler.go"
+            }
+        ],
+        "modify": [
+        ]
+    },
+    "hooks": [
+        "gofmt -w -l ."
+    ]
+}

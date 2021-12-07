@@ -1,0 +1,119 @@
+package {{ .package_name }}
+
+import (
+	"encoding/json"
+	"net/http"
+
+    "{{ .project_mod }}/app/middlewares"
+	"{{ .project_mod }}/app/models"
+	"{{ .project_mod }}/app/service/{{ .name_underline }}/api"
+	"{{ .project_mod }}/app/service/{{ .name_underline }}/service"
+	"github.com/gin-gonic/gin"
+	"gorm.io/gorm"
+)
+
+// Handler {{ .name_zh }}路由管理
+type Handler struct {
+	{{ .name_var }}Service service.{{ .name }}Service
+}
+
+// {{ .name }}List 获取{{ .name_zh }}列表
+func (handler *Handler) {{ .name }}List(ctx *gin.Context) {
+	var req models.PageReq
+	err := ctx.ShouldBindJSON(&req)
+	if err != nil {
+		ctx.JSON(http.StatusBadRequest, models.NewParamErrorResponse(err))
+		return
+	}
+
+	filterBytes, err := req.FilterBytes()
+	if err != nil {
+		ctx.JSON(http.StatusOK, models.NewErrorResponse(err))
+		return
+	}
+
+	var filter api.{{ .name }}ListFilter
+	err = json.Unmarshal(filterBytes, &filter)
+	if err != nil {
+		ctx.JSON(http.StatusBadRequest, models.NewParamErrorResponse(err))
+		return
+	}
+
+	list, count, err := handler.{{ .name_var }}Service.List{{ .name }}(req.Page, req.PageSize, req.Step, &filter)
+	if err != nil {
+		ctx.JSON(http.StatusOK, models.NewErrorResponse(err))
+		return
+	}
+
+	ctx.JSON(http.StatusOK, models.NewSuccessResponse(map[string]interface{}{
+		"list":  list,
+		"count": count,
+	}))
+}
+
+// {{ .name }}Create 创建{{ .name_zh }}
+func (handler *Handler) {{ .name }}Create(ctx *gin.Context) {
+	var req api.{{ .name }}CreateReq
+	err := ctx.ShouldBindJSON(&req)
+	if err != nil {
+		ctx.JSON(http.StatusBadRequest, models.NewParamErrorResponse(err))
+		return
+	}
+
+	err = handler.{{ .name_var }}Service.Create{{ .name }}(&req)
+	if err != nil {
+		ctx.JSON(http.StatusOK, models.NewErrorResponse(err))
+		return
+	}
+	ctx.JSON(http.StatusOK, models.NewSuccessResponse())
+}
+
+// {{ .name }}Update 更新{{ .name_zh }}
+func (handler *Handler) {{ .name }}Update(ctx *gin.Context) {
+	var req api.{{ .name }}UpdateReq
+	err := ctx.ShouldBindJSON(&req)
+	if err != nil {
+		ctx.JSON(http.StatusBadRequest, models.NewParamErrorResponse(err))
+		return
+	}
+
+	err = handler.{{ .name_var }}Service.Update{{ .name }}(&req)
+	if err != nil {
+		ctx.JSON(http.StatusOK, models.NewErrorResponse(err))
+		return
+	}
+	ctx.JSON(http.StatusOK, models.NewSuccessResponse())
+}
+
+// {{ .name }}Delete 删除{{ .name_zh }}
+func (handler *Handler) {{ .name }}Delete(ctx *gin.Context) {
+	var req api.{{ .name }}DeleteReq
+	err := ctx.ShouldBindJSON(&req)
+	if err != nil {
+		ctx.JSON(http.StatusBadRequest, models.NewParamErrorResponse(err))
+		return
+	}
+
+	err = handler.{{ .name_var }}Service.Delete{{ .name }}(&req)
+	if err != nil {
+		ctx.JSON(http.StatusOK, models.NewErrorResponse(err))
+		return
+	}
+	ctx.JSON(http.StatusOK, models.NewSuccessResponse())
+}
+
+// Handle guest routes.
+func Handle(engine *gin.Engine, db *gorm.DB) {
+	handler := Handler{
+		{{ .name_var }}Service: service.New{{ .name }}Service(db),
+	}
+
+	guestNS := engine.Group("/api/v1/{{ .name_underline }}")
+	guestNS.Use(middlewares.JWT)
+	{
+		guestNS.POST("/list", handler.{{ .name }}List)
+		guestNS.POST("/create", handler.{{ .name }}Create)
+		guestNS.POST("/update", handler.{{ .name }}Update)
+		guestNS.POST("/delete", handler.{{ .name }}Delete)
+	}
+}

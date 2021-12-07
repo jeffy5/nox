@@ -1,0 +1,65 @@
+package dao
+
+import (
+    "{{ .project_mod }}/app/models"
+	"gorm.io/gorm"
+)
+
+var _ {{ .name }}Dao = (*{{ .name_var }}Dao)(nil)
+
+// {{ .name }}Dao {{ .name_zh }}数据库操作
+type {{ .name }}Dao interface {
+	// List 获取{{ .name_zh }}列表
+	List(page, pageSize int, where string, whereArgs []interface{}) ([]models.{{ .name }}, error)
+	// Count 统计{{ .name_zh }}总数
+	Count(where string, whereArgs []interface{}) (int64, error)
+	// 创建{{ .name_zh }}
+	Create({{ .name_var }} *models.{{ .name }}) error
+	// 更新{{ .name_zh }}
+	Update({{ .name_var }} *models.{{ .name }}) error
+	// 删除{{ .name_zh }}
+	Delete({{ .name_var }} *models.{{ .name }}) error
+}
+
+type {{ .name_var }}Dao struct {
+	db *gorm.DB
+}
+
+// New{{ .name }}Dao return a new {{ .name_var }} dao.
+func New{{ .name }}Dao(db *gorm.DB) {{ .name }}Dao {
+	return &{{ .name_var }}Dao{
+		db: db,
+	}
+}
+
+// List 获取{{ .name_zh }}列表
+func (dao *{{ .name_var }}Dao) List(page int, pageSize int, where string, whereArgs []interface{}) ([]models.{{ .name }}, error) {
+	offset := (page - 1) * pageSize
+	var list []models.{{ .name }}
+	err := dao.db.Model(models.{{ .name }}{}).Where(where, whereArgs...).Offset(offset).Limit(pageSize).Find(&list).Error
+	return list, err
+}
+
+// Count 统计{{ .name_zh }}总数
+func (dao *{{ .name_var }}Dao) Count(where string, whereArgs []interface{}) (int64, error) {
+	var count int64
+	err := dao.db.Model(models.{{ .name }}{}).Where(where, whereArgs...).Count(&count).Error
+	return count, err
+}
+
+// 创建{{ .name_zh }}
+func (dao *{{ .name_var }}Dao) Create({{ .name_var }} *models.{{ .name }}) error {
+	return dao.db.Create({{ .name_var }}).Error
+}
+
+// 更新{{ .name_zh }}
+func (dao *{{ .name_var }}Dao) Update({{ .name_var }} *models.{{ .name }}) error {
+	return dao.db.Model(models.{{ .name }}{}).Where("id = ?", {{ .name_var }}.ID).Updates(&{{ .name_var }}).Error
+}
+
+// 删除{{ .name_zh }}
+func (dao *{{ .name_var }}Dao) Delete({{ .name_var }} *models.{{ .name }}) error {
+	return dao.db.Model(models.{{ .name }}{}).Where("id = ?", {{ .name_var }}.ID).Updates(map[string]interface{}{
+		"status": models.StatusDelete,
+	}).Error
+}

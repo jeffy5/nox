@@ -1,0 +1,87 @@
+package service
+
+import (
+    "{{ .project_mod }}/app/models"
+	"{{ .project_mod }}/app/service/{{ .name_var }}/api"
+	"{{ .project_mod }}/app/service/{{ .name_var }}/dao"
+	"gorm.io/gorm"
+)
+
+var _ {{ .name }}Service = (*{{ .name_var }}Service)(nil)
+
+// {{ .name }}Service {{ .name_zh }}服务
+type {{ .name }}Service interface {
+	// List{{ .name }} 获取{{ .name_zh }}列表
+	List{{ .name }}(page, pageSize int, step string, filter *api.{{ .name }}ListFilter) ([]api.{{ .name }}ListRes, int64, error)
+
+	// Create{{ .name }} 创建{{ .name_zh }}
+	Create{{ .name }}(req *api.{{ .name }}CreateReq) error
+	// Update{{ .name }} 更新{{ .name_zh }}
+	Update{{ .name }}(req *api.{{ .name }}UpdateReq) error
+	// Delete{{ .name }} 更新{{ .name_zh }}
+	Delete{{ .name }}(req *api.{{ .name }}DeleteReq) error
+}
+
+type {{ .name_var }}Service struct {
+	{{ .name_var }}Dao dao.{{ .name }}Dao
+}
+
+// New{{ .name }}Service return a new {{ .name_var }} service.
+func New{{ .name }}Service(db *gorm.DB) {{ .name }}Service {
+	return &{{ .name_var }}Service{
+		{{ .name_var }}Dao: dao.New{{ .name }}Dao(db),
+	}
+}
+
+// List{{ .name }} 获取{{ .name_zh }}列表
+func (service *{{ .name_var }}Service) List{{ .name }}(page int, pageSize int, step string, filter *api.{{ .name }}ListFilter) ([]api.{{ .name }}ListRes, int64, error) {
+	where, whereArgs := filter.Where()
+	list, err := service.{{ .name_var }}Dao.List(page, pageSize, where, whereArgs)
+	if err != nil {
+		return nil, 0, err
+	}
+
+	var count int64
+	if step == "start" {
+		count, err = service.{{ .name_var }}Dao.Count(where, whereArgs)
+		if err != nil {
+			return nil, 0, err
+		}
+	}
+
+	listRes := make([]api.{{ .name }}ListRes, 0, len(list))
+	for _, {{ .name_var }} := range list {
+		res := api.{{ .name }}ListRes{
+            {{ range split .fields "," }}{{ $attrList := split . ":" }}{{ index $attrList 0 }}: {{ $.name_var }}.{{ index $attrList 0 }},
+            {{ end }}
+		}
+		listRes = append(listRes, res)
+	}
+	return listRes, count, nil
+}
+
+// Create{{ .name }} 创建{{ .name_zh }}
+func (service *{{ .name_var }}Service) Create{{ .name }}(req *api.{{ .name }}CreateReq) error {
+	{{ .name_var }} := models.{{ .name }}{
+        {{ range split .fields "," }}{{ $attrList := split . ":" }}{{ index $attrList 0 }}: req.{{ index $attrList 0 }},
+        {{ end }}
+	}
+	return service.{{ .name_var }}Dao.Create(&{{ .name_var }})
+}
+
+// Update{{ .name }} 更新{{ .name_zh }}
+func (service *{{ .name_var }}Service) Update{{ .name }}(req *api.{{ .name }}UpdateReq) error {
+	{{ .name_var }} := models.{{ .name }}{
+        {{ range split .fields "," }}{{ $attrList := split . ":" }}{{ index $attrList 0 }}: req.{{ index $attrList 0 }},
+        {{ end }}
+	}
+	return service.{{ .name_var }}Dao.Update(&{{ .name_var }})
+}
+
+// Delete{{ .name }} 删除{{ .name_zh }}
+func (service *{{ .name_var }}Service) Delete{{ .name }}(req *api.{{ .name }}DeleteReq) error {
+	{{ .name_var }} := models.{{ .name }}{
+		ID: req.ID,
+	}
+	return service.{{ .name_var }}Dao.Delete(&{{ .name_var }})
+}

@@ -1,0 +1,42 @@
+package api
+
+import (
+	"fmt"
+	"strings"
+)
+
+// {{ .name }}ListFilter 获取{{ .name_zh }}列表过滤参数
+type {{ .name }}ListFilter struct {
+    {{ range $field := split .fields "," }}{{ $attrList := split $field ":" }}{{ range $i, $attr := $attrList }}{{ if eq $i (sub (len $attrList) 1) }}`json:"{{ $attr }}"`
+    {{ else }}{{ $attr }} {{ end }}{{ end }}{{ end }}
+}
+
+// Where return where and where args.
+func (filter *{{ .name }}ListFilter) Where() (string, []interface{}) {
+	var where strings.Builder
+	whereArgs := make([]interface{}, 0)
+	return where.String(), whereArgs
+}
+
+// {{ .name }}ListRes 获取{{ .name_zh }}列表响应参数
+type {{ .name }}ListRes struct {
+    {{ range $field := split .fields "," }}{{ $attrList := split $field ":" }}{{ range $i, $attr := $attrList }}{{ if eq $i (sub (len $attrList) 1) }}`json:"{{ $attr }}"`
+    {{ else }}{{ $attr }} {{ end }}{{ end }}{{ end }}
+}
+
+// {{ .name }}CreateReq 创建{{ .name_zh }}请求参数
+type {{ .name }}CreateReq struct {
+    {{ range $field := split .fields "," }}{{ $attrList := split $field ":" }}{{ range $i, $attr := $attrList }}{{ if eq $i (sub (len $attrList) 1) }}`json:"{{ $attr }}"`
+    {{ else }}{{ $attr }} {{ end }}{{ end }}{{ end }}
+}
+
+// {{ .name }}UpdateReq 更新{{ .name_zh }}请求参数
+type {{ .name }}UpdateReq struct {
+    {{ range $field := split .fields "," }}{{ $attrList := split $field ":" }}{{ range $i, $attr := $attrList }}{{ if eq $i (sub (len $attrList) 1) }}`json:"{{ $attr }}"`
+    {{ else }}{{ $attr }} {{ end }}{{ end }}{{ end }}
+}
+
+// {{ .name }}DeleteReq 删除{{ .name_zh }}请求参数
+type {{ .name }}DeleteReq struct {
+	ID uint64 `json:"id"`
+}
