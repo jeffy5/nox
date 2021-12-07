@@ -52,19 +52,19 @@
         "create": [
             {
                 "template": "template/api.go.tmpl",
-                "destination": "app/service/{{ .name_underline }}/api/{{ .name_underline }}.go"
+                "destination": "app/service/{{ .package_name }}/api/{{ .name_underline }}.go"
             },
             {
                 "template": "template/dao.go.tmpl",
-                "destination": "app/service/{{ .name_underline }}/dao/{{ .name_underline }}.go"
+                "destination": "app/service/{{ .package_name }}/dao/{{ .name_underline }}.go"
             },
             {
                 "template": "template/service.go.tmpl",
-                "destination": "app/service/{{ .name_underline }}/service/{{ .name_underline }}.go"
+                "destination": "app/service/{{ .package_name }}/service/{{ .name_underline }}.go"
             },
             {
                 "template": "template/handler.go.tmpl",
-                "destination": "app/service/{{ .name_underline }}/handler.go"
+                "destination": "app/service/{{ .package_name }}/handler.go"
             }
         ],
         "modify": [

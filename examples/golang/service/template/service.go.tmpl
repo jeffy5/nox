@@ -52,6 +52,7 @@ func (service *{{ .name_var }}Service) List{{ .name }}(page int, pageSize int, s
 	listRes := make([]api.{{ .name }}ListRes, 0, len(list))
 	for _, {{ .name_var }} := range list {
 		res := api.{{ .name }}ListRes{
+            ID: {{ .name_var }}.ID,
             {{ range split .fields "," }}{{ $attrList := split . ":" }}{{ index $attrList 0 }}: {{ $.name_var }}.{{ index $attrList 0 }},
             {{ end }}
 		}
@@ -71,17 +72,23 @@ func (service *{{ .name_var }}Service) Create{{ .name }}(req *api.{{ .name }}Cre
 
 // Update{{ .name }} 更新{{ .name_zh }}
 func (service *{{ .name_var }}Service) Update{{ .name }}(req *api.{{ .name }}UpdateReq) error {
-	{{ .name_var }} := models.{{ .name }}{
-        {{ range split .fields "," }}{{ $attrList := split . ":" }}{{ index $attrList 0 }}: req.{{ index $attrList 0 }},
-        {{ end }}
+    {{ .name_var }}, err := service.{{ .name_var }}Dao.GetByID(req.ID)
+	if err != nil {
+		return err
 	}
-	return service.{{ .name_var }}Dao.Update(&{{ .name_var }})
+
+    return service.{{ .name_var }}Dao.Update({{ .name_var }}.ID, req.UpdateMap())
 }
 
 // Delete{{ .name }} 删除{{ .name_zh }}
 func (service *{{ .name_var }}Service) Delete{{ .name }}(req *api.{{ .name }}DeleteReq) error {
-	{{ .name_var }} := models.{{ .name }}{
-		ID: req.ID,
+    {{ .name_var }}, err := service.{{ .name_var }}Dao.GetByID(req.ID)
+	if err != nil {
+		return err
 	}
-	return service.{{ .name_var }}Dao.Delete(&{{ .name_var }})
+
+	updateMap := map[string]interface{}{
+		"status": models.StatusDelete,
+	}
+    return service.{{ .name_var }}Dao.Update({{ .name_var }}.ID, updateMap)
 }

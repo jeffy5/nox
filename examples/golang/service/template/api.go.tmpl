@@ -1,7 +1,6 @@
 package api
 
 import (
-	"fmt"
 	"strings"
 )
 
@@ -20,6 +19,7 @@ func (filter *{{ .name }}ListFilter) Where() (string, []interface{}) {
 
 // {{ .name }}ListRes 获取{{ .name_zh }}列表响应参数
 type {{ .name }}ListRes struct {
+	ID uint64 `json:"id"`
     {{ range $field := split .fields "," }}{{ $attrList := split $field ":" }}{{ range $i, $attr := $attrList }}{{ if eq $i (sub (len $attrList) 1) }}`json:"{{ $attr }}"`
     {{ else }}{{ $attr }} {{ end }}{{ end }}{{ end }}
 }
@@ -32,8 +32,15 @@ type {{ .name }}CreateReq struct {
 
 // {{ .name }}UpdateReq 更新{{ .name_zh }}请求参数
 type {{ .name }}UpdateReq struct {
+	ID uint64 `json:"id"`
     {{ range $field := split .fields "," }}{{ $attrList := split $field ":" }}{{ range $i, $attr := $attrList }}{{ if eq $i (sub (len $attrList) 1) }}`json:"{{ $attr }}"`
     {{ else }}{{ $attr }} {{ end }}{{ end }}{{ end }}
+}
+
+// UpdateMap return a update map
+func (req *{{ .name }}UpdateReq) UpdateMap() map[string]interface{} {
+	return map[string]interface{}{
+	}
 }
 
 // {{ .name }}DeleteReq 删除{{ .name_zh }}请求参数

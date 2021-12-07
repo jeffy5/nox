@@ -13,12 +13,12 @@ type {{ .name }}Dao interface {
 	List(page, pageSize int, where string, whereArgs []interface{}) ([]models.{{ .name }}, error)
 	// Count 统计{{ .name_zh }}总数
 	Count(where string, whereArgs []interface{}) (int64, error)
-	// 创建{{ .name_zh }}
+	// Create 创建{{ .name_zh }}
 	Create({{ .name_var }} *models.{{ .name }}) error
-	// 更新{{ .name_zh }}
-	Update({{ .name_var }} *models.{{ .name }}) error
-	// 删除{{ .name_zh }}
-	Delete({{ .name_var }} *models.{{ .name }}) error
+    // GetByID 根据 ID 获取{{.name_zh}}
+    GetByID(id uint64) (*models.{{ .name }}, error)
+	// Update 更新{{ .name_zh }}
+	Update(id uint64, updates map[string]interface{}) error
 }
 
 type {{ .name_var }}Dao struct {
@@ -47,19 +47,26 @@ func (dao *{{ .name_var }}Dao) Count(where string, whereArgs []interface{}) (int
 	return count, err
 }
 
-// 创建{{ .name_zh }}
+// Create 创建{{ .name_zh }}
 func (dao *{{ .name_var }}Dao) Create({{ .name_var }} *models.{{ .name }}) error {
 	return dao.db.Create({{ .name_var }}).Error
 }
 
-// 更新{{ .name_zh }}
+// Update 更新{{ .name_zh }}
 func (dao *{{ .name_var }}Dao) Update({{ .name_var }} *models.{{ .name }}) error {
 	return dao.db.Model(models.{{ .name }}{}).Where("id = ?", {{ .name_var }}.ID).Updates(&{{ .name_var }}).Error
 }
 
-// 删除{{ .name_zh }}
-func (dao *{{ .name_var }}Dao) Delete({{ .name_var }} *models.{{ .name }}) error {
-	return dao.db.Model(models.{{ .name }}{}).Where("id = ?", {{ .name_var }}.ID).Updates(map[string]interface{}{
-		"status": models.StatusDelete,
-	}).Error
+// GetByID 根据 ID 获取{{ .name_zh }}
+func (dao *{{ .name_var }}Dao) GetByID(id uint64) (*models.{{ .name }}, error) {
+    var {{ .name_var }} models.{{ .name }}
+    err := dao.db.Model(models.{{ .name }}{}).Where(map[string]interface{}{
+		"id":       id,
+    }).First(&{{ .name_var }}).Error
+    return &{{ .name_var }}, err
+}
+
+// 更新{{ .name_zh }}
+func (dao *{{ .name_var }}Dao) Update(id uint64, updates map[string]interface{}) error {
+    return dao.db.Model(models.{{ .name }}{}).Where("id = ?", id).Updates(updates).Error
 }
