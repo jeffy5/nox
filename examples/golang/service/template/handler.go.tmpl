@@ -6,8 +6,8 @@ import (
 
     "{{ .project_mod }}/app/middlewares"
 	"{{ .project_mod }}/app/models"
-	"{{ .project_mod }}/app/service/{{ .name_underline }}/api"
-	"{{ .project_mod }}/app/service/{{ .name_underline }}/service"
+	"{{ .project_mod }}/app/service/{{ .package_name }}/api"
+	"{{ .project_mod }}/app/service/{{ .package_name }}/service"
 	"github.com/gin-gonic/gin"
 	"gorm.io/gorm"
 )
