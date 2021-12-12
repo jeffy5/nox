@@ -61,7 +61,7 @@ func (dao *{{ .name_var }}Dao) GetByID(id uint64) (*models.{{ .name }}, error) {
     return &{{ .name_var }}, err
 }
 
-// 更新{{ .name_zh }}
+// Update 更新{{ .name_zh }}
 func (dao *{{ .name_var }}Dao) Update(id uint64, updates map[string]interface{}) error {
     return dao.db.Model(models.{{ .name }}{}).Where("id = ?", id).Updates(updates).Error
 }
